@@ -8,7 +8,7 @@ Add nodes (no checks to see if nodes are being added in sequential order)
 
 Add connections (checks to make sure that both nodes have already been added to graph)
 
-  Note: connections cannot be edited once they have been added to the graph
+    Note: connections cannot be edited once they have been added to the graph
   
 In progress: adding implementation of Dijkstra's Algorithm
 
