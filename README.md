@@ -12,4 +12,4 @@ Add connections (checks to make sure that both nodes have already been added to 
   
 In progress: adding implementation of Dijkstra's Algorithm
 
-  got some funky issues when trying to access the nodes/making it recursive, but at this point I probably would have been forced to restart the entire project.
+    got some funky issues when trying to access the nodes/making it recursive, but at this point I probably would have been forced to restart the entire project.
