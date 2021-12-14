@@ -101,14 +101,77 @@ impl Graph {
     }
   }
 
-  pub fn adj_matrix(&mut self) {
+ pub fn adj_matrix(&mut self) {
     let size = self.node_list().len();
-    let prefilled = Array2D::filled_with(42, 2, 3);
+    let mut matrix = vec![vec![0; size]; size];
+    let mut count = 0;
+    for node in self.node_list() {
+      for end in &node.connections {
+        let (y, cost) = end;
+        let y_coord = y.as_ref().unwrap().borrow().data;
+        // println!("{:?}", y_coord);
+        matrix[count as usize][y_coord as usize] = 1;
+      }
+      count += 1;
+      // println!("{:?}", node.connections());
+    }
+
+    println!("{:?}", matrix);
+  }
+
+  pub fn dijkstras(&mut self, start: u32) {
+    let mut start_exist = false;
+    let mut dscore = 0;
+    let node_list_len = self.node_list.len();
+    let mut dscore_vec = vec![i32::MAX;node_list_len];
+    // let mut curr_node: GraphNode;
+    let mut curr_node = GraphNode {
+      data: 0,
+      connections: Vec::new(),
+    };
+
+    for node in self.node_list() {
+      if node.data() == start {
+        start_exist = true;
+        curr_node = node;
+      }
+    }
+
+    if !start_exist {
+      panic!("node does not exist in tree")
+    } else {
+      let mut visited_vec = Vec::<u32>::new();
+      while visited_vec.len() != node_list_len {
+        visited_vec.push(curr_node.data());
+        let mut next_node: GraphNode;
+        for edge in curr_node.connections {
+          let (end, cost) = edge;
+          let mut lowest_cost = i32::MAX;
+          let end_node = end.as_ref().unwrap().borrow().data;
+          if !visited_vec.contains(&end_node) {
+            if dscore_vec[end_node as usize] > dscore + cost {
+              dscore_vec[end_node as usize] = dscore + cost;
+            }
+            if cost < lowest_cost {
+              lowest_cost = cost;
+              // next node to visit is determined by least-cost edge from current node
+              next_node = Box::into_inner((*end.as_ref().unwrap().borrow()));
+            }
+          }
+          dscore += lowest_cost;
+        }
+        curr_node = next_node;
+      }
+
+      println!("{:?}", visited_vec);
+    }
+
+    println!("{:?}", dscore_vec);
   }
 }
 
 fn main() {
-    println!("Hello, world!");
+    // println!("Hello, world!");
     let mut graph = Graph::new();
     // println!("New graph created: {:?}", graph);
     graph.add_node(0);
@@ -116,9 +179,11 @@ fn main() {
     graph.add_node(1);
     // println!("Second node added: {:?}", graph);
     graph.add_connection(0,1,14);
-    println!("Node0 and Node1 connected: {:?}", graph);
+    // graph.add_connection(0,1,15);
+    // println!("Node0 and Node1 connected: {:?}", graph);
     graph.add_connection(1,0,12);
-    println!("Node1 and Node0 connected: {:?}", graph);
+    graph.adj_matrix();
+    // println!("Node1 and Node0 connected: {:?}", graph);
     // let mut test_node = GraphNode::new();
     // println!("New node created: {:?}", test_node)
 }
