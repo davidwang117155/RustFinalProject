@@ -1,4 +1,4 @@
-# RustFinalProjet
+# RustFinalProject
 
 Implementation of a graph data type using rust. 
 
